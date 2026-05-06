@@ -463,21 +463,23 @@ av.msg.updatePopStats = function (msg) {
 
     //console.log('av.parents.name.length = ',av.parents.name.length);
     for (var ii = 0; ii<av.pch.numDads; ii++) {
+      var dadName = av.parents.name[ii];
+      if (!av.pch.ensureDadSeries(dadName)) continue;
       //console.log('msg.by_clade[av.parents.name[ii]]=',msg.by_clade[av.parents.name[ii]]);
       //console.log('msg.by_clade['+av.parents.name[ii]+'].fitness=', msg.by_clade[av.parents.name[ii]].fitness);
-      if (undefined != msg.by_clade[av.parents.name[ii]]) {
-        av.pch.dadFit[av.parents.name[ii]][msg.update] = msg.by_clade[av.parents.name[ii]].fitness;
-        av.pch.dadCst[av.parents.name[ii]][msg.update] = msg.by_clade[av.parents.name[ii]].gestation;
-        av.pch.dadEar[av.parents.name[ii]][msg.update] = msg.by_clade[av.parents.name[ii]].metabolism;
-        av.pch.dadNum[av.parents.name[ii]][msg.update] = msg.by_clade[av.parents.name[ii]].organisms;
-        av.pch.dadVia[av.parents.name[ii]][msg.update] = msg.by_clade[av.parents.name[ii]].viables;
+      if (undefined != msg.by_clade && undefined != msg.by_clade[dadName]) {
+        av.pch.dadFit[dadName][msg.update] = msg.by_clade[dadName].fitness;
+        av.pch.dadCst[dadName][msg.update] = msg.by_clade[dadName].gestation;
+        av.pch.dadEar[dadName][msg.update] = msg.by_clade[dadName].metabolism;
+        av.pch.dadNum[dadName][msg.update] = msg.by_clade[dadName].organisms;
+        av.pch.dadVia[dadName][msg.update] = msg.by_clade[dadName].viables;
       }
       else {
-        av.pch.dadFit[av.parents.name[ii]][msg.update] = null;
-        av.pch.dadCst[av.parents.name[ii]][msg.update] = null;
-        av.pch.dadEar[av.parents.name[ii]][msg.update] = null;
-        av.pch.dadNum[av.parents.name[ii]][msg.update] = null;
-        av.pch.dadVia[av.parents.name[ii]][msg.update] = null;
+        av.pch.dadFit[dadName][msg.update] = null;
+        av.pch.dadCst[dadName][msg.update] = null;
+        av.pch.dadEar[dadName][msg.update] = null;
+        av.pch.dadNum[dadName][msg.update] = null;
+        av.pch.dadVia[dadName][msg.update] = null;
       }
       //console.log('av.pch.dadfFit['+av.parents.name[ii]+']['+msg.update+']=', av.pch.dadFit[av.parents.name[ii]][msg.update]);
     }
@@ -737,4 +739,3 @@ function doDbReady(fio) {
  http://www.w3schools.com/html/html5_webworkers.asp
  http://stackoverflow.com/questions/29181021/how-to-stop-javascript-in-webworker-from-outside
  */
-

@@ -709,21 +709,21 @@ av.dnd.landTrashCan = function (source, nodes, target) {
     remove.type = 'g';
     if (av.debug.dnd) console.log('fzOrgan->trash; nodes[0]',nodes[0]);
     if (av.debug.dnd) console.log('fzOrgan->trash; source.parent',source.parent);
-    source.parent.removeChild(nodes[0]);       //http://stackoverflow.com/questions/1812148/dojo-dnd-move-node-programmatically
+    if (nodes[0].parentNode === source.parent) source.parent.removeChild(nodes[0]);       //http://stackoverflow.com/questions/1812148/dojo-dnd-move-node-programmatically
     source.sync();
     av.fzr.saveUpdateState('no');
   }
   else if ('fzConfig' == source.node.id && '@default' != nodes[0].textContent) {
     remove.domid = Object.keys(av.dnd.fzConfig.selection)[0];
     remove.type = 'c';
-    source.parent.removeChild(nodes[0]);       //http://stackoverflow.com/questions/1812148/dojo-dnd-move-node-programmatically
+    if (nodes[0].parentNode === source.parent) source.parent.removeChild(nodes[0]);       //http://stackoverflow.com/questions/1812148/dojo-dnd-move-node-programmatically
     source.sync();
     av.fzr.saveUpdateState('no');
   }
   else if ('fzWorld' == source.node.id && '@example' != nodes[0].textContent) {
     remove.domid = Object.keys(av.dnd.fzWorld.selection)[0];
     remove.type = 'w';
-    source.parent.removeChild(nodes[0]);       //http://stackoverflow.com/questions/1812148/dojo-dnd-move-node-programmatically
+    if (nodes[0].parentNode === source.parent) source.parent.removeChild(nodes[0]);       //http://stackoverflow.com/questions/1812148/dojo-dnd-move-node-programmatically
     source.sync();
     av.fzr.saveUpdateState('no');
   }
@@ -1040,21 +1040,23 @@ av.dnd.contextMenu = function(target, fzItemID) {
   aMenu.addChild(new dijit.MenuItem({
     label: 'delete',
     onClick: function () {
-      av.post.addUser('Button: delete:' + document.getElementById(fzItemID).textContent);
-      var sure = confirm('Do you want to delete ' + document.getElementById(fzItemID).textContent);
+      var fzItem = document.getElementById(fzItemID);
+      var itemText = fzItem ? fzItem.textContent : fzItemID;
+      av.post.addUser('Button: delete:' + itemText);
+      var sure = confirm('Do you want to delete ' + itemText);
       if (sure) {
         dir = av.fzr.dir[fzItemID];
         av.fzr.file[dir+'/entryname.txt'];
-        if ('fzOrgan' == fzSection) {
+        if (dir && 'fzOrgan' == fzSection) {
           av.fwt.removeFzrItem(dir, 'g')
-        } else if ('fzConfig' == fzSection){
+        } else if (dir && 'fzConfig' == fzSection){
           av.fwt.removeFzrItem(dir, 'c')
-        } else if ('fzWorld' == fzSection){
+        } else if (dir && 'fzWorld' == fzSection){
           av.fwt.removeFzrItem(dir, 'w')
         }
         target.selectNone();
-        dojo.destroy(fzItemID);
-        target.delItem(fzItemID);
+        if (fzItem && fzItem.parentNode === target.parent) dojo.destroy(fzItem);
+        if (target.map && target.map[fzItemID]) target.delItem(fzItemID);
         av.fzr.saveUpdateState('no');
         //need to remove from fzr and pouchDB
       }
