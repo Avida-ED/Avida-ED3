@@ -313,6 +313,7 @@ av.fwt.makeCSV = function(fileNm) {
   'use strict';
   //console.log('av.fwt.makeCSV fileNm=', fileNm);
   //console.log('av.ui.page=', av.ui.page);
+  av.fwt.csvStrg = '';
   if ('populationBlock' === av.ui.page) {
     //  '@default at update 141 Average Fitness,@default at update 141 Average Gestation Time,' +
     //  '@default at update 141 Average Energy Acq. Rate,@default at update 141 Count of Organisms in the World';
