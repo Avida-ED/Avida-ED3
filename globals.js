@@ -536,6 +536,7 @@ for (var ii = 0; ii < 9; ii++) { av.grd.fnChosen[av.ptd.logicButtons[ii]] = fals
 av.grd.ytitle = 'Average Fitness';
 av.grd.notInDrawingGrid = true;
 av.grd.newlyNone = true;
+av.grd.drawGridSetupFn = function () {};
 
 av.grd.clearGrd = function () {
   av.grd.runState = 'prepping';  //'started'; 'world';

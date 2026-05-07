@@ -3,6 +3,10 @@
 
 av.fio.addFzItem = function(dndSection, name, type, fileNum) {
   'use strict';
+  if (!dndSection || !dndSection.insertNodes) {
+    console.log('av.fio.addFzItem called without a freezer section');
+    return 'dndSection is undefined';
+  }
   dndSection.insertNodes(false, [{data: name, type: [type]}]);
   dndSection.sync();
   var mapItems = Object.keys(dndSection.map);
@@ -666,4 +670,3 @@ function writeDxFile(db, path, contents) {
     });
 }
 */
-

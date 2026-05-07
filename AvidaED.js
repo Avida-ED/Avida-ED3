@@ -2144,7 +2144,7 @@ require([
     av.grd.gridWasCols = Number(av.dom.sizeCols.value);
     av.grd.gridWasRows = Number(av.dom.sizeRows.value);
     //reset zoom power to 1
-    av.grd.zoomSlide.set('value', 1);
+    if (av.grd.zoomSlide && av.grd.zoomSlide.set) av.grd.zoomSlide.set('value', 1);
     av.parents.placeAncestors();
     //are any parents on the same cell?
     av.grd.cellConflict(NewCols, NewRows);
@@ -3059,4 +3059,3 @@ To make a gif using screen capture
  A web application reverses a GIF.
     http://gifmaker.me/reverser/
  */
-

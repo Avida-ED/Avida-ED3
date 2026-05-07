@@ -598,6 +598,7 @@ av.ptd.updateLogicFn = function (mUpdate){
 av.grd.updateSelectedOrganismType = function (msg) {
   'use strict';
   var prefix = '';
+  var ancestorData = av.grd.msg && av.grd.msg.ancestor ? av.grd.msg.ancestor.data : null;
   if (av.debug.msg) console.log('selected_msg', msg);
   if (msg.isEstimate) prefix = 'est. ';
   else prefix = '';
@@ -614,10 +615,10 @@ av.grd.updateSelectedOrganismType = function (msg) {
   if (null === msg.ancestor) {
     //console.log('av.grd.msg', av.grd.msg);
     if (av.debug.msg) console.log('msg.ancestor === null_______________________________________________________');
-    if ('undefined' != typeof av.grd.msg.ancestor) {
-      if (null === av.grd.msg.ancestor.data[av.grd.selectedNdx])
+    if (ancestorData) {
+      if (null === ancestorData[av.grd.selectedNdx])
         ancestorLabel.textContent = ' ';
-      else ancestorLabel.textContent = av.parents.name[av.grd.msg.ancestor.data[av.grd.selectedNdx]];
+      else ancestorLabel.textContent = av.parents.name[ancestorData[av.grd.selectedNdx]];
     }
     else ancestorLabel.textContent = ' ';
   }
@@ -698,6 +699,7 @@ av.grd.updateSelectedOrganismType = function (msg) {
 
 av.msg.fillColorBlock = function (msg) {  //Draw the color block
     'use strict';
+    var ancestorData = av.grd.msg && av.grd.msg.ancestor ? av.grd.msg.ancestor.data : null;
     if (av.debug.msg) console.log('in fillColorBlock');
     //if (av.debug.msg) console.log('ndx', av.grd.selectedNdx, '; msg.ancestor.data[ndx]',av.grd.msg.ancestor.data[av.grd.selectedNdx]);
     if (av.debug.msg) console.log('av.grd.fill[av.grd.selectedNdx]',av.grd.fill[av.grd.selectedNdx]);
@@ -711,7 +713,7 @@ av.msg.fillColorBlock = function (msg) {  //Draw the color block
     }
     else {
       if (null === av.grd.fill[av.grd.selectedNdx]) {
-        if (null === av.grd.msg.ancestor.data[av.grd.selectedNdx]) av.grd.selCtx.fillStyle = '#000';
+        if (!ancestorData || null === ancestorData[av.grd.selectedNdx]) av.grd.selCtx.fillStyle = '#000';
         else av.grd.selCtx.fillStyle = '#888';
       }
       else if (0 == av.grd.fill[av.grd.selectedNdx]) av.grd.selCtx.fillStyle = av.color.defaultKidColor;
