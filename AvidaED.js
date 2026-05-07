@@ -475,7 +475,7 @@ require([
     av.post.addUser('Button: mnFlOpenDefaultWS');
     av.fio.useDefault = true;
     av.fio.isB64 = false;
-    if ('no' === av.fzr.saveState) sWSfDialog.show();  //Save WSfile Dialog box
+    if ('no' === av.fzr.saveState || 'maybe' === av.fzr.saveState) sWSfDialog.show();  //Save WSfile Dialog box
     else {
       av.fio.readZipWS(av.fio.defaultFname, false);  //false = do not load config file
     }
@@ -508,7 +508,7 @@ require([
     av.post.addUser('Button: mnFlOpenWS');
     av.fio.useDefault = false;
     av.fio.isB64 = false;
-    if ('no' === av.fzr.saveState) sWSfDialog.show();   //Need to change to include might be saved tiba fix
+    if ('no' === av.fzr.saveState || 'maybe' === av.fzr.saveState) sWSfDialog.show();
     //else document.getElementById('inputFile').click();
     else document.getElementById('putWS').click();  // calls av.fio.userPickZipRead
   });
@@ -518,7 +518,7 @@ require([
     av.post.addUser('Button: mnFlOpenB64');
     av.fio.useDefault = false;
     av.fio.isB64 = true;
-    if ('no' === av.fzr.saveState) sWSfDialog.show();
+    if ('no' === av.fzr.saveState || 'maybe' === av.fzr.saveState) sWSfDialog.show();
     //else document.getElementById('inputFile').click();
     else document.getElementById('putWS').click();   // call av.fio.userPickZipRead()
   });

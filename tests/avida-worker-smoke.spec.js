@@ -235,3 +235,82 @@ test('freezer delete tolerates stale DOM nodes outside the target container', as
   expect(result.stillInMap).toBe(false);
   expect(result.errors).toEqual([]);
 });
+
+test('open workspace prompts when freezer save state is maybe', async ({ page }) => {
+  await page.goto('/AvidaED.html?avidaTest=1');
+  await page.evaluate(() => window.avidaTest.waitForReady());
+
+  const result = await page.evaluate(() => {
+    window.avidaTest.clearMessages();
+    var putWS = document.getElementById('putWS');
+    var oldDialog = window.sWSfDialog;
+    var oldClick = putWS.click;
+    var oldReadZipWS = av.fio.readZipWS;
+    var oldSaveState = av.fzr.saveState;
+    var clicked = 0;
+    var shows = 0;
+    var readCalls = [];
+
+    function trigger(id) {
+      var widget = dijit.byId(id);
+      if (widget && typeof widget.onClick === 'function') {
+        widget.onClick();
+        return;
+      }
+      document.getElementById(id).dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    }
+
+    putWS.click = function () {
+      clicked += 1;
+    };
+    window.sWSfDialog = {
+      show: function () {
+        shows += 1;
+      },
+      hide: function () {}
+    };
+    av.fio.readZipWS = function (fname, loadConfigFlag) {
+      readCalls.push({ fname: fname, loadConfigFlag: loadConfigFlag });
+    };
+
+    function run(id, state) {
+      clicked = 0;
+      shows = 0;
+      readCalls.length = 0;
+      av.fzr.saveState = state;
+      trigger(id);
+      return {
+        clicked: clicked,
+        shows: shows,
+        readCalls: readCalls.slice()
+      };
+    }
+
+    try {
+      return {
+        userMaybe: run('mnFlOpenWS', 'maybe'),
+        userNo: run('mnFlOpenWS', 'no'),
+        userYes: run('mnFlOpenWS', 'yes'),
+        defaultMaybe: run('mnFlOpenDefaultWS', 'maybe'),
+        defaultYes: run('mnFlOpenDefaultWS', 'yes'),
+        b64Maybe: run('mnFlOpenB64', 'maybe'),
+        errors: window.avidaTest.state.errors
+      };
+    } finally {
+      window.sWSfDialog = oldDialog;
+      putWS.click = oldClick;
+      av.fio.readZipWS = oldReadZipWS;
+      av.fzr.saveState = oldSaveState;
+    }
+  });
+
+  expect(result.userMaybe).toMatchObject({ shows: 1, clicked: 0 });
+  expect(result.userNo).toMatchObject({ shows: 1, clicked: 0 });
+  expect(result.userYes).toMatchObject({ shows: 0, clicked: 1 });
+  expect(result.defaultMaybe).toMatchObject({ shows: 1, clicked: 0 });
+  expect(result.defaultYes.shows).toBe(0);
+  expect(result.defaultYes.readCalls).toHaveLength(1);
+  expect(result.defaultYes.readCalls[0].loadConfigFlag).toBe(false);
+  expect(result.b64Maybe).toMatchObject({ shows: 1, clicked: 0 });
+  expect(result.errors).toEqual([]);
+});
