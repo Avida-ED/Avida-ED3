@@ -101,7 +101,8 @@ For an interactive browser run:
 npm run test:headed
 ```
 
-The suite in `tests/` currently covers worker import/data flow, missing parent
+The suite in `tests/` currently covers app-shell rendering without the test
+harness, opt-in test-harness loading, worker import/data flow, missing parent
 time-series data in population stats, freezer deletion with stale DOM nodes,
 workspace-open save prompts, and CSV export with empty analysis selections.
 
@@ -152,5 +153,4 @@ they cannot be dropped on the grid itself.
 
 Populated dishes must be dragged to one of the text boxes at the
 bottom; they cannot be dropped on the chart area.
-
 
